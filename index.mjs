@@ -114,7 +114,7 @@ export const handler = async (event, _context) => {
           let money = info?.money == null ? 0 : info.money;
           money += 3000;
           await misskeyAPIClient.request("notes/create", {
-            text: `バイト代 ${(3000).toLocaleString()} 円ゲット！\n所持金： ${money.toLocaleString()}`,
+            text: `バイト代 ${(3000).toLocaleString()} 円ゲット！\n所持金： ${money.toLocaleString()} 円`,
           });
           return { id: "orange_san_info", money: money };
         });
