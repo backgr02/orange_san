@@ -1,7 +1,7 @@
-import * as Misskey from "misskey-js";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { EventBridgeClient, PutRuleCommand } from "@aws-sdk/client-eventbridge";
-import { DynamoDBDocumentClient, PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import * as Misskey from "misskey-js";
 
 const misskeyAPIClient = new Misskey.api.APIClient({
   origin: process.env.MISSKEY_URI,
