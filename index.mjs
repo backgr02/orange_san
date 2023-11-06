@@ -1,11 +1,7 @@
 import * as Misskey from "misskey-js";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { EventBridgeClient, PutRuleCommand } from "@aws-sdk/client-eventbridge";
-import {
-  DynamoDBDocumentClient,
-  PutCommand,
-  GetCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const misskeyAPIClient = new Misskey.api.APIClient({
   origin: process.env.MISSKEY_URI,
@@ -39,19 +35,15 @@ async function mention(body) {
 }
 
 async function test(aaa) {
-  const response = await dynamo.send(
-    new GetCommand({ TableName: tableName, Key: { id: "orange_san_info" } })
-  );
-  await dynamo.send(
-    new PutCommand({ TableName: tableName, Item: await aaa(response.Item) })
-  );
+  const response = await dynamo.send(new GetCommand({ TableName: tableName, Key: { id: "orange_san_info" } }));
+  await dynamo.send(new PutCommand({ TableName: tableName, Item: await aaa(response.Item) }));
 }
 
 async function wakeUp() {
-  const schedule = `cron(${random(0, 59)} ${random(21, 23)} * * ? *)`;
-  await new EventBridgeClient().send(
-    new PutRuleCommand({ Name: "wake-up", ScheduleExpression: schedule })
-  );
+  const nowJst = new Date(Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000);
+  const tomorrowDay = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"][nowJst.getDay()];
+  const schedule = `cron(${random(0, 59)} ${random(21, 23)} ? * ${tomorrowDay} *)`;
+  await new EventBridgeClient().send(new PutRuleCommand({ Name: "wake-up", ScheduleExpression: schedule }));
   const text = `:_zi::_lyo::_pa::blobcat_frustration: :ohayo:
 #口から唾液とIQが溢れ出る音
 @LoginBonus@misskey.m544.net ろぐぼ`;
