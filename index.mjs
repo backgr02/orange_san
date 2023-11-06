@@ -77,7 +77,8 @@ export const handler = async (event, _context) => {
       // response = await post(JSON.parse(event.body));
       const body = JSON.parse(event.body);
       if (body.type === "mention") {
-        response = await mention(body);
+        // response = await mention(body);
+        response = { a: body.type };
       } else {
         response = { a: body.type };
       }
