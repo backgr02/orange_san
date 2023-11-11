@@ -41,7 +41,7 @@ async function test(aaa) {
 
 async function wakeUp() {
   const nowJst = new Date(Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000);
-  const tomorrowDay = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"][nowJst.getDay()];
+  const tomorrowDay = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][nowJst.getDay()];
   const schedule = `cron(${random(0, 59)} ${random(21, 23)} ? * ${tomorrowDay} *)`;
   await new EventBridgeClient().send(new PutRuleCommand({ Name: "wake-up", ScheduleExpression: schedule }));
   const text = `:_zi::_lyo::_pa::blobcat_frustration: :ohayo:
