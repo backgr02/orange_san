@@ -50,6 +50,18 @@ async function wakeUp() {
   return await misskeyAPIClient.request("notes/create", { text: text });
 }
 
+async function followed(body) {
+  return await createFollowing(body.body.user.id);
+}
+
+async function renote(body) {
+  return await createFollowing(body.body.note.user.id);
+}
+
+async function createFollowing(userId) {
+  return await misskeyAPIClient.request("following/create", { userId: userId });
+}
+
 export const handler = async (event, _context) => {
   try {
     console.log(JSON.stringify(event));
@@ -76,9 +88,14 @@ export const handler = async (event, _context) => {
     } else if ("body" in event) {
       // response = await post(JSON.parse(event.body));
       const body = JSON.parse(event.body);
+      console.log(JSON.stringify(body));
       if (body.type === "mention") {
         // response = await mention(body);
         response = { a: body.type };
+      } else if (body.type === "followed") {
+        response = await followed(body);
+      } else if (body.type === "renote") {
+        response = await renote(body);
       } else {
         response = { a: body.type };
       }
