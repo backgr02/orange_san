@@ -1,0 +1,57 @@
+/// @ 0.16.0
+// 日替わりのチンチン大小賭博
+
+// 選択肢
+let choices = [{
+	baseSize: '18'
+	returnBig: '216,000'
+	returnSmall: '1,004'
+} {
+	baseSize: '17'
+	returnBig: '54,000'
+	returnSmall: '1,018'
+} {
+	baseSize: '16'
+	returnBig: '21,600'
+	returnSmall: '1,048'
+} {
+	baseSize: '15'
+	returnBig: '10,800'
+	returnSmall: '1,102'
+}]
+
+// シードが「今日の日付」である乱数生成器を用意
+let random = Math:gen_rng(`{Date:year()}{Date:month()}{Date:day()}`)
+
+// ランダムに選択肢を選ぶ
+let chosen = choices[random(0 (choices.len - 1))]
+
+// UIを表示
+Ui:render([
+	Ui:C:container({
+		align: 'center'
+		children: [
+			Ui:C:mfm({ text: `本日の設定` size: 1.5 bold: true})
+			Ui:C:mfm({ text: `:misuhai: の :chinchin: が {chosen.baseSize} cm 以上ならば :dai::chinchin:`})
+			Ui:C:mfm({ text: `:dai::chinchin::atari: で {chosen.returnBig} 円のリターン`})
+			Ui:C:mfm({ text: `:syou::chinchin::atari: で {chosen.returnSmall} 円のリターン`})
+			Ui:C:mfm({ text: `🍊「さあ、張った張った」` size: 1.5 bold: true})
+			Ui:C:postFormButton({
+				text: "大に 1,000 円を賭ける"
+				rounded: true
+				primary: true
+				form: {
+                    text: `:misuhai: の :chinchin: は $[tada :dai:] !{Str:lf}{THIS_URL}{Str:lf}@orange_san@misskey.io #チンチン大小賭博{chosen.baseSize}大 #チンチン大小賭博`
+				}
+			})
+			Ui:C:postFormButton({
+				text: "小に 1,000 円を賭ける"
+				rounded: true
+				primary: false
+				form: {
+                    text: `:misuhai: の :chinchin: は $[tada :syou:] !{Str:lf}{THIS_URL}{Str:lf}@orange_san@misskey.io #チンチン大小賭博{chosen.baseSize}小 #チンチン大小賭博`
+				}
+			})
+		]
+	})
+])

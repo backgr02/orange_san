@@ -21,22 +21,159 @@ function random(min, max) {
 }
 
 async function mention(body) {
-  console.log(JSON.stringify(body));
-
   const note = body.body.note;
   const user = body.body.note.user;
 
+  if (
+    !(
+      note.tags?.includes("チンチン大小賭博15大") ||
+      note.tags?.includes("チンチン大小賭博15小") ||
+      note.tags?.includes("チンチン大小賭博16大") ||
+      note.tags?.includes("チンチン大小賭博16小") ||
+      note.tags?.includes("チンチン大小賭博17大") ||
+      note.tags?.includes("チンチン大小賭博17小") ||
+      note.tags?.includes("チンチン大小賭博18大") ||
+      note.tags?.includes("チンチン大小賭博18小")
+    )
+  ) {
+    console.log(JSON.stringify(note.tags));
+    return {};
+  }
+
+  const match = note.text?.match(/:\w+:/);
+  const emoji = match ? match[0] : ":misuhai:";
+  console.log(emoji);
+
+  const size = [random(1, 6), random(1, 6), random(1, 6)];
+  const sumSize = size[0] + size[1] + size[2];
+
+  console.log(JSON.stringify(size));
+
+  const baseSize = parseInt(note.tags[0].substr(-3, 2), 10);
+  const bet = note.tags[0].substr(-1, 1);
   const host = user?.host ? `@${user.host}` : "";
-  return await misskeyAPIClient.request("notes/create", {
-    text: `@${user.username}${host} うん`,
-    replyId: note.id,
-    visibility: note.visibility,
-  });
+
+  console.log(JSON.stringify(baseSize));
+  console.log(JSON.stringify(bet));
+
+  /*
+  18	 1	215	¥216,000.0	¥1,004.0
+  17	 4	212	¥ 54,000.0	¥1,018.0
+  16	10	206	¥ 21,600.0	¥1,048.0
+  15	20	196	¥ 10,800.0	¥1,102.0
+
+  18	 1	215	216.000	1.004
+  17	 4	212	 54.000	1.018
+  16	10	206	 21.600	1.048
+  15	20	196	 10.800	1.102
+
+  */
+
+  const magnificationTable = {
+    18: { 大: 216.0, 小: 1.004 },
+    17: { 大: 54.0, 小: 1.018 },
+    16: { 大: 21.6, 小: 1.048 },
+    15: { 大: 10.8, 小: 1.102 },
+  };
+
+  const scaleX = sumSize / 10.0;
+  if (sumSize >= baseSize) {
+    if (bet === "大") {
+      const tmp = parseInt(magnificationTable[baseSize][bet] * 1000);
+      await test(async (info) => {
+        let money = info?.money == null ? 0 : info.money;
+        const diff = 1000 - tmp;
+        money += diff;
+        await misskeyAPIClient.request("notes/create", {
+          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
+            scaleX - 1.0
+          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
+            size[2]
+          })\n 合計: ${sumSize} cm (${baseSize} cm 以上) :superplay:\n@${
+            user.username
+          }${host} ${tmp.toLocaleString()} 円をリターン!\n🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
+          replyId: note.id,
+          visibility: note.visibility,
+        });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":superplay:" });
+        return { id: "orange_san_info", money: money };
+      });
+    } else if (bet === "小") {
+      await test(async (info) => {
+        let money = info?.money == null ? 0 : info.money;
+        const diff = 1000;
+        money += diff;
+        await misskeyAPIClient.request("notes/create", {
+          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
+            scaleX - 1.0
+          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
+            size[2]
+          })\n 合計: ${sumSize} cm (${baseSize} cm 以上) :zantou:\n@${
+            user.username
+          }${host} ${diff.toLocaleString()} 円を没収!\n🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
+          replyId: note.id,
+          visibility: note.visibility,
+        });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":zantou:" });
+        return { id: "orange_san_info", money: money };
+      });
+    } else {
+      return {};
+    }
+  } else {
+    if (bet === "大") {
+      await test(async (info) => {
+        let money = info?.money == null ? 0 : info.money;
+        const diff = 1000;
+        money += diff;
+        await misskeyAPIClient.request("notes/create", {
+          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
+            scaleX - 1.0
+          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
+            size[2]
+          })\n 合計: ${sumSize} cm (${baseSize} cm 未満) :hazure:\n@${
+            user.username
+          }${host} ${diff.toLocaleString()} 円を没収!\n🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
+          replyId: note.id,
+          visibility: note.visibility,
+        });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":hazure:" });
+        return { id: "orange_san_info", money: money };
+      });
+    } else if (bet === "小") {
+      const tmp = parseInt(magnificationTable[baseSize][bet] * 1000);
+      await test(async (info) => {
+        let money = info?.money == null ? 0 : info.money;
+        const diff = 1000 - tmp;
+        money += diff;
+        await misskeyAPIClient.request("notes/create", {
+          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
+            scaleX - 1.0
+          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
+            size[2]
+          })\n 合計: ${sumSize} cm (${baseSize} cm 未満) :atari:\n@${
+            user.username
+          }${host} ${tmp.toLocaleString()} 円をリターン!\n🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
+          replyId: note.id,
+          visibility: note.visibility,
+        });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":atari:" });
+        return { id: "orange_san_info", money: money };
+      });
+    } else {
+      return {};
+    }
+  }
+
+  return {};
 }
 
 async function test(aaa) {
   const response = await dynamo.send(new GetCommand({ TableName: tableName, Key: { id: "orange_san_info" } }));
-  await dynamo.send(new PutCommand({ TableName: tableName, Item: await aaa(response.Item) }));
+  console.log(JSON.stringify(response.Item));
+  const item = await aaa(response.Item);
+  console.log(JSON.stringify(item));
+  await dynamo.send(new PutCommand({ TableName: tableName, Item: item }));
 }
 
 async function wakeUp() {
@@ -75,7 +212,7 @@ export const handler = async (event, _context) => {
             let money = info?.money == null ? 0 : info.money;
             money += 3000;
             await misskeyAPIClient.request("notes/create", {
-              text: `バイト代 ${(3000).toLocaleString()} 円ゲット！\n所持金: ${money.toLocaleString()} 円`,
+              text: `バイト代ゲット!\n🍊 所持金: ${money.toLocaleString()} 円 (+${(3000).toLocaleString()} 円)`,
             });
             return { id: "orange_san_info", money: money };
           });
@@ -90,8 +227,7 @@ export const handler = async (event, _context) => {
       const body = JSON.parse(event.body);
       console.log(JSON.stringify(body));
       if (body.type === "mention") {
-        // response = await mention(body);
-        response = { a: body.type };
+        response = await mention(body);
       } else if (body.type === "followed") {
         response = await followed(body);
       } else if (body.type === "renote") {
