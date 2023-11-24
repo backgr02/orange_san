@@ -18,6 +18,22 @@ let choices = [{
 	baseSize: '15'
 	returnBig: '10,800'
 	returnSmall: '1,102'
+} {
+	baseSize: '14'
+	returnBig: '6,171'
+	returnSmall: '1,193'
+} {
+	baseSize: '13'
+	returnBig: '3,857'
+	returnSmall: '1,350'
+} {
+	baseSize: '12'
+	returnBig: '2,666'
+	returnSmall: '1,600'
+} {
+	baseSize: '11'
+	returnBig: '2,000'
+	returnSmall: '2,000'
 }]
 
 // シードが「今日の日付」である乱数生成器を用意
@@ -35,7 +51,7 @@ Ui:render([
 			Ui:C:mfm({ text: `:misuhai: の :chinchin: が {chosen.baseSize} cm 以上ならば :dai::chinchin:`})
 			Ui:C:mfm({ text: `:dai::chinchin::atari: で {chosen.returnBig} 円のリターン`})
 			Ui:C:mfm({ text: `:syou::chinchin::atari: で {chosen.returnSmall} 円のリターン`})
-			Ui:C:mfm({ text: `🍊「さあ、張った張った」` size: 1.5 bold: true})
+			Ui:C:mfm({ text: `🍊「さあ、張った張った!」` size: 1.5 bold: true})
 			Ui:C:postFormButton({
 				text: "大に 1,000 円を賭ける"
 				rounded: true

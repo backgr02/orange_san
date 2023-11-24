@@ -26,14 +26,22 @@ async function mention(body) {
 
   if (
     !(
-      note.tags?.includes("チンチン大小賭博15大") ||
-      note.tags?.includes("チンチン大小賭博15小") ||
-      note.tags?.includes("チンチン大小賭博16大") ||
-      note.tags?.includes("チンチン大小賭博16小") ||
+      note.tags?.includes("チンチン大小賭博18大") ||
+      note.tags?.includes("チンチン大小賭博18小") ||
       note.tags?.includes("チンチン大小賭博17大") ||
       note.tags?.includes("チンチン大小賭博17小") ||
-      note.tags?.includes("チンチン大小賭博18大") ||
-      note.tags?.includes("チンチン大小賭博18小")
+      note.tags?.includes("チンチン大小賭博16大") ||
+      note.tags?.includes("チンチン大小賭博16小") ||
+      note.tags?.includes("チンチン大小賭博15大") ||
+      note.tags?.includes("チンチン大小賭博15小") ||
+      note.tags?.includes("チンチン大小賭博14大") ||
+      note.tags?.includes("チンチン大小賭博14小") ||
+      note.tags?.includes("チンチン大小賭博13大") ||
+      note.tags?.includes("チンチン大小賭博13小") ||
+      note.tags?.includes("チンチン大小賭博12大") ||
+      note.tags?.includes("チンチン大小賭博12小") ||
+      note.tags?.includes("チンチン大小賭博11大") ||
+      note.tags?.includes("チンチン大小賭博11小")
     )
   ) {
     console.log(JSON.stringify(note.tags));
@@ -59,16 +67,14 @@ async function mention(body) {
   console.log(JSON.stringify(bet));
 
   /*
-  18	 1	215	¥216,000.0	¥1,004.0
-  17	 4	212	¥ 54,000.0	¥1,018.0
-  16	10	206	¥ 21,600.0	¥1,048.0
-  15	20	196	¥ 10,800.0	¥1,102.0
-
-  18	 1	215	216.000	1.004
-  17	 4	212	 54.000	1.018
-  16	10	206	 21.600	1.048
-  15	20	196	 10.800	1.102
-
+  18	  1	215	216.000	1.004	 0.000	-0.140
+  17	  4	212	 54.000	1.018	 0.000	-0.184
+  16	 10	206	 21.600	1.048	 0.000	-0.112
+  15	 20	196	 10.800	1.102	 0.000	-0.008
+  14	 35	181	 6.171	1.193	-0.015	-0.067
+  13	 56	160	 3.857	1.350	-0.008	 0.000
+  12	 81	135	 2.666	1.600	-0.054	 0.000
+  11	108	108	 2.000	2.000	 0.000	 0.000
   */
 
   const magnificationTable = {
@@ -76,6 +82,10 @@ async function mention(body) {
     17: { 大: 54.0, 小: 1.018 },
     16: { 大: 21.6, 小: 1.048 },
     15: { 大: 10.8, 小: 1.102 },
+    14: { 大: 6.171, 小: 1.193 },
+    13: { 大: 3.857, 小: 1.35 },
+    12: { 大: 2.666, 小: 1.6 },
+    11: { 大: 2.0, 小: 2.0 },
   };
 
   const scaleX = sumSize / 10.0;
@@ -110,13 +120,13 @@ $[position.x=0,y=-1 :blaze:]
         money += diff;
         await misskeyAPIClient.request("notes/create", {
           text: `${text}
- 合計: ${sumSize} cm (${baseSize} cm 以上) :zantou:
+ 合計: ${sumSize} cm (${baseSize} cm 以上) :hazure:
 @${user.username}${host} から ${diff.toLocaleString()} 円を没収!
 🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
           renoteId: note.id,
           visibility: note.visibility,
         });
-        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":zantou:" });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":hazure:" });
         return { id: "orange_san_info", money: money };
       });
     } else {
@@ -130,13 +140,13 @@ $[position.x=0,y=-1 :blaze:]
         money += diff;
         await misskeyAPIClient.request("notes/create", {
           text: `${text}
- 合計: ${sumSize} cm (${baseSize} cm 未満) :hazure:
+ 合計: ${sumSize} cm (${baseSize} cm 未満) :zantou:
 @${user.username}${host} から ${diff.toLocaleString()} 円を没収!
 🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
           renoteId: note.id,
           visibility: note.visibility,
         });
-        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":hazure:" });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":zantou:" });
         return { id: "orange_san_info", money: money };
       });
     } else if (bet === "小") {
