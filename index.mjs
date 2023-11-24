@@ -40,12 +40,14 @@ async function mention(body) {
     return {};
   }
 
-  const match = note.text?.match(/:\w+:/);
-  const emoji = match ? match[0] : ":misuhai:";
+  const match1 = note.text?.match(/^:\w+:/);
+  const match2 = note.text?.match(/^@\w+/);
+  const emoji = match1 ? match1[0] : match2 ? match2[0] : ":misuhai:";
   console.log(emoji);
 
   const size = [random(1, 6), random(1, 6), random(1, 6)];
   const sumSize = size[0] + size[1] + size[2];
+  const sizeStr = `(🎲${size[0]}/🎲${size[1]}/🎲${size[2]})`;
 
   console.log(JSON.stringify(size));
 
@@ -77,6 +79,9 @@ async function mention(body) {
   };
 
   const scaleX = sumSize / 10.0;
+  const text = `
+🍊「勝負!」
+$[scale.x=${scaleX},y=1 $[rotate.deg=310 $[flip :_yi:]]]$[position.x=${scaleX - 1.0} ${emoji} :boron: ${sizeStr}]`;
   if (sumSize >= baseSize) {
     if (bet === "大") {
       const tmp = parseInt(magnificationTable[baseSize][bet] * 1000);
@@ -85,14 +90,14 @@ async function mention(body) {
         const diff = 1000 - tmp;
         money += diff;
         await misskeyAPIClient.request("notes/create", {
-          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
-            scaleX - 1.0
-          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
-            size[2]
-          })\n 合計: ${sumSize} cm (${baseSize} cm 以上) :superplay:\n@${
-            user.username
-          }${host} ${tmp.toLocaleString()} 円をリターン!\n🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
-          replyId: note.id,
+          text: `${text}
+ 合計: ${sumSize} cm (${baseSize} cm 以上) :superplay:
+@${user.username}${host} へ ${tmp.toLocaleString()} 円をリターン!
+🍊「${emoji} のポンコツ! お仕置きだよ!」
+$[scale.x=${scaleX},y=1 $[rotate.deg=310 $[flip :_yi:]]]$[position.x=${scaleX - 1.0} ${emoji}「:uwa_xtu:」]
+$[position.x=0,y=-1 :blaze:]
+🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
+          renoteId: note.id,
           visibility: note.visibility,
         });
         await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":superplay:" });
@@ -104,14 +109,11 @@ async function mention(body) {
         const diff = 1000;
         money += diff;
         await misskeyAPIClient.request("notes/create", {
-          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
-            scaleX - 1.0
-          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
-            size[2]
-          })\n 合計: ${sumSize} cm (${baseSize} cm 以上) :zantou:\n@${
-            user.username
-          }${host} ${diff.toLocaleString()} 円を没収!\n🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
-          replyId: note.id,
+          text: `${text}
+ 合計: ${sumSize} cm (${baseSize} cm 以上) :zantou:
+@${user.username}${host} から ${diff.toLocaleString()} 円を没収!
+🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
+          renoteId: note.id,
           visibility: note.visibility,
         });
         await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":zantou:" });
@@ -127,14 +129,11 @@ async function mention(body) {
         const diff = 1000;
         money += diff;
         await misskeyAPIClient.request("notes/create", {
-          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
-            scaleX - 1.0
-          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
-            size[2]
-          })\n 合計: ${sumSize} cm (${baseSize} cm 未満) :hazure:\n@${
-            user.username
-          }${host} ${diff.toLocaleString()} 円を没収!\n🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
-          replyId: note.id,
+          text: `${text}
+ 合計: ${sumSize} cm (${baseSize} cm 未満) :hazure:
+@${user.username}${host} から ${diff.toLocaleString()} 円を没収!
+🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
+          renoteId: note.id,
           visibility: note.visibility,
         });
         await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":hazure:" });
@@ -147,14 +146,11 @@ async function mention(body) {
         const diff = 1000 - tmp;
         money += diff;
         await misskeyAPIClient.request("notes/create", {
-          text: `🍊「ようござんすか?ようござんすね?」\n🍊「勝負!」\n${emoji} $[position.x=${
-            scaleX - 1.0
-          } $[scale.x=${scaleX},y=1 $[rotate.deg=50 :_yi:]]   :boron:] (🎲${size[0]}/🎲${size[1]}/🎲${
-            size[2]
-          })\n 合計: ${sumSize} cm (${baseSize} cm 未満) :atari:\n@${
-            user.username
-          }${host} ${tmp.toLocaleString()} 円をリターン!\n🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
-          replyId: note.id,
+          text: `${text}
+ 合計: ${sumSize} cm (${baseSize} cm 未満) :atari:
+@${user.username}${host} へ ${tmp.toLocaleString()} 円をリターン!
+🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
+          renoteId: note.id,
           visibility: note.visibility,
         });
         await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":atari:" });
