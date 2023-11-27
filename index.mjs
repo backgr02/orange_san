@@ -103,7 +103,7 @@ $[scale.x=${scaleX},y=1 $[rotate.deg=310 $[flip :_yi:]]]$[position.x=${scaleX - 
           text: `${text}
  合計: ${sumSize} cm (${baseSize} cm 以上) :superplay:
 @${user.username}${host} へ ${tmp.toLocaleString()} 円をリターン!
-🍊「${misuhai} のポンコツ! お仕置きだよ!」
+🍊「このポンコツ! お仕置きだよ!」
 $[scale.x=${scaleX},y=1 $[rotate.deg=310 $[flip :_yi:]]]$[position.x=${scaleX - 1.0} ${misuhai}「:uwa_xtu:」]
 $[position.x=0,y=-1 :blaze:]
 🍊 所持金: ${money.toLocaleString()} 円 (${diff.toLocaleString()} 円)`,
