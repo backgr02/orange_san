@@ -48,6 +48,15 @@ async function mention(body) {
     return {};
   }
 
+  const renotes = await misskeyAPIClient.request("notes/renotes", { noteId: note.id });
+  console.log(`renotes.length: ${renotes.length}`);
+  for (const renote of renotes) {
+    console.log(`renote.user: ${JSON.stringify(renote.user)}`);
+    if (renote.userId === body.userId) {
+      return { message: "すでにリノートされています。" };
+    }
+  }
+
   const match1 = note.text?.match(/^(.+)の :chinchin:/);
   const match2 = note.text?.match(/^(.+) :chinchin:/);
   const misuhai = (match1 ? match1[1] : match2 ? match2[1] : ":misuhai:").trim();
