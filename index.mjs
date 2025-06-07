@@ -149,13 +149,13 @@ $[position.x=0,y=-1 :blaze:]
         money += diff;
         await misskeyAPIClient.request("notes/create", {
           text: `${text}
- 合計: ${sumSize} cm (${baseSize} cm 未満) :zantou:
+ 合計: ${sumSize} cm (${baseSize} cm 未満) :zantou2:
 @${user.username}${host} から ${diff.toLocaleString()} 円を没収!
 🍊 所持金: ${money.toLocaleString()} 円 (+${diff.toLocaleString()} 円)`,
           renoteId: note.id,
           visibility: note.visibility,
         });
-        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":zantou:" });
+        await misskeyAPIClient.request("notes/reactions/create", { noteId: note.id, reaction: ":zantou2:" });
         return { id: "orange_san_info", money: money };
       });
     } else if (bet === "小") {
